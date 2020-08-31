@@ -1,0 +1,9 @@
+spring:
+  rabbitmq:
+    host: fawkes.ml
+    port: 5672
+    username: admin
+    password: 1qaz@WSX
+    virtual-host: /web
+server:
+  port: 8888
