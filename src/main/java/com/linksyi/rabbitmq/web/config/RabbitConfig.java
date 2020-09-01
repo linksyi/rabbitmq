@@ -1,7 +1,13 @@
 package com.linksyi.rabbitmq.web.config;
 
 
+import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Mr.zuoyi
