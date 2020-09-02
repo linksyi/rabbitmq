@@ -1,5 +1,6 @@
 package com.linksyi.rabbitmq.web.controller;
 
+import com.linksyi.rabbitmq.web.config.DeadLetterConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,8 @@ public class SeniorController {
 
     @GetMapping("delayed")
     public String delayedSend(){
-        rabbitTemplate.convertSendAndReceive("businessExchange", "", "发送一条死信消息");
-        rabbitTemplate.convertSendAndReceive("businessExchange", "", "发送一条业务消息");
-        return "延时队列发送成功";
+        rabbitTemplate.convertSendAndReceive(DeadLetterConfig.BUSINESS_EXCHANGE, "", "发送一条死信消息deadletter");
+        rabbitTemplate.convertSendAndReceive(DeadLetterConfig.BUSINESS_EXCHANGE, "", "发送一条业务消息business");
+        return "死信队列发送成功";
     }
 }

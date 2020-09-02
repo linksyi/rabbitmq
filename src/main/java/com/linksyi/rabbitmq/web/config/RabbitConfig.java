@@ -2,6 +2,13 @@ package com.linksyi.rabbitmq.web.config;
 
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.ContentTypeDelegatingMessageConverter;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +22,6 @@ import java.util.Map;
  * @createTime 2020年08月29日 14:00:00
  */
 
-@Configurable
 public class RabbitConfig {
 
     /**
@@ -42,4 +48,30 @@ public class RabbitConfig {
 
     public static final String DIRECT_EXCHANGE_NAME = "direct_exchange";
     public static final String TOPIC_EXCHANGE_NAME = "topic_exchange";
+
+
+    @Bean
+    public RabbitAdmin rabbitTemplate(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMessageConverter(messageConverter);
+        return template;
+    }
+
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory, MessageConverter messageConverter) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(messageConverter);
+        return factory;
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
+        return new ContentTypeDelegatingMessageConverter(new Jackson2JsonMessageConverter());
+    }
 }
